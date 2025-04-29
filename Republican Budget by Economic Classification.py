@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import time
 
 
-budget_type = "Республиканский бюджет в разрезе экономической классификации"
+budget_type = "Республикианский бюджет в разрезе экономической классификации"
 region = "Республика Казахстан"  
 start_date = datetime(2023, 1, 1)
 end_date = datetime(2025, 4, 1)
