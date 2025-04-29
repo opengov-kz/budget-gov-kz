@@ -1,20 +1,57 @@
 import requests
 import pandas as pd
+from datetime import datetime, timedelta
+import time
 
-url = 'https://budget.egov.kz/budgetexecutioncontroller/getincomedatajson?type=%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B8%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9%20%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82&region=%D0%9A%D0%BE%D1%81%D1%82%D0%B0%D0%BD%D0%B0%D0%B9%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C&date=01.2023&unit=qwe&_search=false&nd=1745832076039&rows=10000&page=1&sidx=id&sord=asc'
 
-response = requests.get(url)
-if response.status_code == 200:
-    data = response.json()
+budget_type = "Республикианский бюджет"
+region = "Республика Казахстан"  # важно!
+start_date = datetime(2023, 1, 1)
+end_date = datetime(2025, 4, 1)
 
-    if 'rows' in data:
-        df = pd.DataFrame(data['rows'])
-        
-        # CSV
-        file_name = 'Республиканский бюджет_01_2023.csv'
-        df.to_csv(file_name, index=False)
-        print(f"Данные успешно сохранены в файл: {file_name}")
+
+all_data = []
+
+
+def fetch_month_data(date_str, delay=1):
+    base_url = "https://budget.egov.kz/budgetexecutioncontroller/getincomedatajson"
+    params = {
+        "type": budget_type,
+        "region": region,
+        "date": date_str,
+        "unit": "qwe",
+        "_search": "false",
+        "nd": str(int(time.time() * 1000)),
+        "rows": "10000",
+        "page": "1",
+        "sidx": "id",
+        "sord": "asc"
+    }
+
+    response = requests.get(base_url, params=params)
+    if response.status_code == 200:
+        json_data = response.json()
+        if 'rows' in json_data and json_data['rows']:
+            df = pd.DataFrame(json_data['rows'])  
+            df["month"] = date_str  
+            all_data.append(df)
+            print(f"[✓] Добавлено: {date_str}")
+        else:
+            print(f"[!] Нет данных за: {date_str}")
     else:
-        print("Не удалось найти нужные данные в ответе.")
+        print(f"[✗] Ошибка {response.status_code} за {date_str}")
+    time.sleep(delay)
+
+current_date = start_date
+while current_date <= end_date:
+    month_str = current_date.strftime('%m.%Y')
+    fetch_month_data(month_str)
+    current_date += timedelta(days=31)
+    current_date = current_date.replace(day=1)
+
+if all_data:
+    final_df = pd.concat(all_data, ignore_index=True)
+    final_df.to_csv("all_data_national.csv", index=False)
+    print("\n[✔] Все данные сохранены в all_data_national.csv")
 else:
-    print(f"Ошибка загрузки данных: {response.status_code}")
+    print("\n[!] Данных не найдено.")
