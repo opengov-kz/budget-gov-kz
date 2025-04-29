@@ -12,7 +12,6 @@ end_date = datetime(2025, 4, 1)
 
 all_data = []
 
-
 def fetch_month_data(date_str, delay=1):
     base_url = "https://budget.egov.kz/budgetexecutioncontroller/getincomedatajson"
     params = {
