@@ -1,4 +1,3 @@
-
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
@@ -53,6 +52,6 @@ while current_date <= end_date:
 if all_data:
     final_df = pd.concat(all_data, ignore_index=True)
     final_df.to_csv("Государственный бюджет в разрезе экономической классификации.csv", index=False)
-    print("\n[✔] Государственный бюджет в разрезе экономической классификациии.csv")
+    print("\n[✔] Государственный бюджет в разрезе экономической классификации.csv")
 else:
     print("\n[!] Данных не найдено.")
