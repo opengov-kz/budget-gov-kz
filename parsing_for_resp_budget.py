@@ -52,6 +52,6 @@ while current_date <= end_date:
 if all_data:
     final_df = pd.concat(all_data, ignore_index=True)
     final_df.to_csv("республиканский бюджет.csv", index=False)
-    print("\n[✔] Все данные сохранены в all_data_national.csv")
+    print("\n[✔] Все данные сохранены в республиканский бюджет.csv")
 else:
     print("\n[!] Данных не найдено.")
