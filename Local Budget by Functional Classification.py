@@ -1,18 +1,14 @@
-
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
 import time
 
-
 budget_type = "Местный бюджет в разрезе функциональной классификации"
-region = "Республика Казахстан"  
+region = "Республика Казахстан"
 start_date = datetime(2023, 1, 1)
 end_date = datetime(2025, 4, 1)
 
-
 all_data = []
-
 
 def fetch_month_data(date_str, delay=1):
     base_url = "https://budget.egov.kz/budgetexecutioncontroller/getincomedatajson"
@@ -34,7 +30,7 @@ def fetch_month_data(date_str, delay=1):
         json_data = response.json()
         if 'rows' in json_data and json_data['rows']:
             df = pd.DataFrame(json_data['rows'])  
-            df["month"] = date_str  
+            df["month"] = date_str
             all_data.append(df)
             print(f"[✓] Добавлено: {date_str}")
         else:
@@ -53,6 +49,6 @@ while current_date <= end_date:
 if all_data:
     final_df = pd.concat(all_data, ignore_index=True)
     final_df.to_csv("Местный бюджет в разрезе функциональной классификации.csv", index=False)
-    print("\n[✔] Местный бюджет в разрезе функциональной классификации.csv")
+    print("\n[✔] Местный бюджет в разрезе функциональной классификации.csv успешно сохранен.")
 else:
     print("\n[!] Данных не найдено.")
