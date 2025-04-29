@@ -5,7 +5,7 @@ import time
 
 
 budget_type = "Республикианский бюджет"
-region = "Республика Казахстан"  # важно!
+region = "Республика Казахстан"
 start_date = datetime(2023, 1, 1)
 end_date = datetime(2025, 4, 1)
 
@@ -51,7 +51,7 @@ while current_date <= end_date:
 
 if all_data:
     final_df = pd.concat(all_data, ignore_index=True)
-    final_df.to_csv("all_data_national.csv", index=False)
+    final_df.to_csv("республиканский бюджет.csv", index=False)
     print("\n[✔] Все данные сохранены в all_data_national.csv")
 else:
     print("\n[!] Данных не найдено.")
